@@ -1,0 +1,107 @@
+<div class="dock-list-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h2 class="h3 mb-0">
+          <i class="fas fa-warehouse me-2"></i>
+          Docks Management
+        </h2>
+        <p class="text-muted mb-0">Manage port docks and vessel assignments</p>
+      </div>
+      <div class="col-auto">
+        <div class="d-flex gap-2">
+          <button 
+            class="btn btn-outline-primary"
+            (click)="refreshData()"
+            [disabled]="loading"
+          >
+            <i class="fas fa-sync-alt me-2" [class.fa-spin]="loading"></i>
+            Refresh
+          </button>
+          <button 
+            *ngIf="canCreate()"
+            class="btn btn-primary"
+            (click)="createNewDock()"
+          >
+            <i class="fas fa-plus me-2"></i>
+            New Dock
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <app-dock-filters (filtersChanged)="onFiltersChanged($event)"></app-dock-filters>
+
+  <!-- Statistics -->
+  <div class="row mb-4" *ngIf="!loading">
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon bg-primary">
+          <i class="fas fa-warehouse"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ docks.length }}</div>
+          <div class="stat-label">Total Docks</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon bg-success">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getAvailableDocksCount() }}</div>
+          <div class="stat-label">Available</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon bg-danger">
+          <i class="fas fa-ship"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getOccupiedDocksCount() }}</div>
+          <div class="stat-label">Occupied</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-icon bg-warning">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getDangerousCargoDocksCount() }}</div>
+          <div class="stat-label">Dangerous Cargo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    {{ error }}
+  </div>
+
+  <!-- Results Count -->
+  <div *ngIf="!loading && !error" class="results-info mb-3">
+    <small class="text-muted">
+      Showing {{ filteredDocks.length }} of {{ docks.length }} docks
+    </small>
+  </div>
+
+  <!-- Dock Table -->
+  <div class="table-card">
+    <app-dock-table
+      [docks]="filteredDocks"
+      [loading]="loading"
+      (dockDeleted)="onDockDeleted($event)"
+    ></app-dock-table>
+  </div>
+</div>

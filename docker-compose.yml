@@ -1,0 +1,319 @@
+services:
+  # ==========================
+  # PostgreSQL Databases
+  # ==========================
+  postgres-vessel:
+    image: postgres:15
+    container_name: postgres-vessel
+    environment:
+      POSTGRES_DB: pontus_vessel
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_vessel_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_vessel"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  postgres-dock:
+    image: postgres:15
+    container_name: postgres-dock
+    environment:
+      POSTGRES_DB: pontus_dock
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_dock_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_dock"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  postgres-cargo:
+    image: postgres:15
+    container_name: postgres-cargo
+    environment:
+      POSTGRES_DB: pontus_cargo
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_cargo_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_cargo"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  postgres-crew:
+    image: postgres:15
+    container_name: postgres-crew
+    environment:
+      POSTGRES_DB: pontus_crew
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_crew_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_crew"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  postgres-delivery:
+    image: postgres:15
+    container_name: postgres-delivery
+    environment:
+      POSTGRES_DB: pontus_delivery
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_delivery_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_delivery"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  postgres-auth:
+    image: postgres:15
+    container_name: postgres-auth
+    environment:
+      POSTGRES_DB: pontus_auth
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_pass
+    ports:
+      - "5437:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pontus_user -d pontus_auth"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - pontus-network
+
+  # ==========================
+  # Eureka Naming Server
+  # ==========================
+  naming-server:
+    image: miletaa/pontus-naming-server:latest
+    container_name: naming-server
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - pontus-network
+
+  # ==========================
+  # Authentication Service
+  # ==========================
+  auth-service:
+    image: miletaa/pontus-auth-service:latest
+    container_name: auth-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-auth:5432/pontus_auth
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # API Gateway
+  # ==========================
+  api-gateway:
+    image: miletaa/pontus-api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      naming-server:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Vessel Service
+  # ==========================
+  vessel-service:
+    image: miletaa/pontus-vessel-service:latest
+    container_name: vessel-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres-vessel:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-vessel:5432/pontus_vessel
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Dock Service
+  # ==========================
+  dock-service:
+    image: miletaa/pontus-dock-service:latest
+    container_name: dock-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres-dock:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-dock:5432/pontus_dock
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Cargo Service
+  # ==========================
+  cargo-service:
+    image: miletaa/pontus-cargo-service:latest
+    container_name: cargo-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      postgres-cargo:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-cargo:5432/pontus_cargo
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Crew Service
+  # ==========================
+  crew-service:
+    image: miletaa/pontus-crew-service:latest
+    container_name: crew-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      postgres-crew:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-crew:5432/pontus_crew
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Delivery Service
+  # ==========================
+  delivery-service:
+    image: miletaa/pontus-delivery-service:latest
+    container_name: delivery-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      postgres-delivery:
+        condition: service_healthy
+      naming-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-delivery:5432/pontus_delivery
+      - SPRING_DATASOURCE_USERNAME=pontus_user
+      - SPRING_DATASOURCE_PASSWORD=pontus_pass
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://naming-server:8761/eureka/
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+  # ==========================
+  # Redis (cache)
+  # ==========================
+  redis:
+    image: redis:7-alpine
+    container_name: pontus-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+# ==========================
+# Volumes & Networks
+# ==========================
+volumes:
+  postgres_vessel_data:
+  postgres_dock_data:
+  postgres_cargo_data:
+  postgres_crew_data:
+  postgres_delivery_data:
+  postgres_auth_data:
+
+networks:
+  pontus-network:
+    driver: bridge
+

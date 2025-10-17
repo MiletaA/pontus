@@ -1,0 +1,135 @@
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.sortable:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.sortable i {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.table {
+  font-size: 0.9rem;
+}
+
+.table th {
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.table td {
+  vertical-align: middle;
+  border-top: 1px solid #f1f3f4;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+  transform: scale(1.001);
+  transition: all 0.2s ease;
+}
+
+.btn-group-sm .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.btn-group .btn:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-group .btn:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.btn-group .btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+code {
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.text-nowrap {
+  white-space: nowrap;
+}
+
+.fade-in {
+  animation: fadeInRow 0.3s ease-in;
+}
+
+@keyframes fadeInRow {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Flag icons support
+.fi {
+  width: 20px;
+  height: 15px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+// Responsive design
+@media (max-width: 1200px) {
+  .table {
+    font-size: 0.8rem;
+  }
+  
+  .btn-group-sm .btn {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    border-radius: 0.5rem;
+  }
+  
+  .table th,
+  .table td {
+    padding: 0.5rem 0.25rem;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .btn-group .btn {
+    border-radius: 0.25rem !important;
+    margin-bottom: 0.1rem;
+  }
+}
+
+// Status-specific styling
+.status-SCHEDULED { background-color: var(--vessel-scheduled); }
+.status-UNDERWAY { background-color: var(--vessel-underway); }
+.status-ANCHORED { background-color: var(--vessel-anchored); color: #000; }
+.status-BERTHED { background-color: var(--vessel-berthed); }
+.status-DEPARTED { background-color: var(--vessel-departed); }
+.status-DELAYED { background-color: var(--vessel-delayed); }
+.status-CANCELLED { background-color: var(--vessel-cancelled); }

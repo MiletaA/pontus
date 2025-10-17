@@ -1,0 +1,127 @@
+<div class="dock-form-container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="fas fa-warehouse me-2"></i>
+            {{ isEditMode ? 'Edit Dock' : 'Create New Dock' }}
+          </h4>
+        </div>
+        
+        <div class="card-body">
+          <form [formGroup]="dockForm" (ngSubmit)="onSubmit()">
+            <!-- Name Field -->
+            <div class="mb-3">
+              <label for="name" class="form-label">
+                <i class="fas fa-tag me-1"></i>
+                Dock Name *
+              </label>
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                formControlName="name"
+                [class.is-invalid]="f['name'].invalid && f['name'].touched"
+                placeholder="Enter dock name"
+              >
+              <div class="invalid-feedback" *ngIf="f['name'].invalid && f['name'].touched">
+                <div *ngIf="f['name'].errors?.['required']">Dock name is required</div>
+                <div *ngIf="f['name'].errors?.['maxlength']">Dock name must not exceed 100 characters</div>
+              </div>
+            </div>
+
+            <!-- Max Length Field -->
+            <div class="mb-3">
+              <label for="maxLength" class="form-label">
+                <i class="fas fa-ruler me-1"></i>
+                Maximum Length (meters) *
+              </label>
+              <input
+                type="number"
+                id="maxLength"
+                class="form-control"
+                formControlName="maxLength"
+                [class.is-invalid]="f['maxLength'].invalid && f['maxLength'].touched"
+                placeholder="Enter maximum vessel length"
+                step="0.01"
+                min="0.01"
+              >
+              <div class="invalid-feedback" *ngIf="f['maxLength'].invalid && f['maxLength'].touched">
+                <div *ngIf="f['maxLength'].errors?.['required']">Maximum length is required</div>
+                <div *ngIf="f['maxLength'].errors?.['min']">Maximum length must be greater than 0</div>
+              </div>
+            </div>
+
+            <!-- Handles Dangerous Cargo -->
+            <div class="mb-3">
+              <div class="form-check">
+                <input
+                  type="checkbox"
+                  id="handlesDangerous"
+                  class="form-check-input"
+                  formControlName="handlesDangerous"
+                >
+                <label for="handlesDangerous" class="form-check-label">
+                  <i class="fas fa-exclamation-triangle me-1 text-warning"></i>
+                  Handles Dangerous Cargo
+                </label>
+              </div>
+              <div class="form-text">
+                Check this if the dock is equipped to handle dangerous or hazardous cargo
+              </div>
+            </div>
+
+            <!-- Description Field -->
+            <div class="mb-3">
+              <label for="description" class="form-label">
+                <i class="fas fa-align-left me-1"></i>
+                Description
+              </label>
+              <textarea
+                id="description"
+                class="form-control"
+                formControlName="description"
+                [class.is-invalid]="f['description'].invalid && f['description'].touched"
+                placeholder="Enter dock description (optional)"
+                rows="3"
+              ></textarea>
+              <div class="invalid-feedback" *ngIf="f['description'].invalid && f['description'].touched">
+                <div *ngIf="f['description'].errors?.['maxlength']">Description must not exceed 500 characters</div>
+              </div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="alert alert-danger" *ngIf="error">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              {{ error }}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="loading"
+              >
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!loading" class="fas fa-save me-2"></i>
+                {{ loading ? 'Saving...' : (isEditMode ? 'Update Dock' : 'Create Dock') }}
+              </button>
+              
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="cancel()"
+                [disabled]="loading"
+              >
+                <i class="fas fa-times me-2"></i>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

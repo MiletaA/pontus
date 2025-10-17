@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200,http://localhost:3000"
+            allowedMethods: "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+      discovery:
+        locator:
+          enabled: false
+      loadbalancer:
+        enabled: false
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: # Not used, we use custom decoder
+          issuer-uri: # Not used, we use custom decoder
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    com.pontus.gateway: DEBUG
+    org.springframework.security: DEBUG
+    root: INFO

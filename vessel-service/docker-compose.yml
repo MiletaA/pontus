@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres-vessel:
+    image: postgres:15-alpine
+    container_name: postgres-vessel
+    environment:
+      POSTGRES_DB: vessel_db
+      POSTGRES_USER: pontus_user
+      POSTGRES_PASSWORD: pontus_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - vessel_postgres_data:/var/lib/postgresql/data
+    networks:
+      - pontus-network
+
+  vessel-service:
+    build: .
+    container_name: vessel-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-vessel:5432/vessel_db
+      SPRING_DATASOURCE_USERNAME: pontus_user
+      SPRING_DATASOURCE_PASSWORD: pontus_password
+    depends_on:
+      - postgres-vessel
+    networks:
+      - pontus-network
+    restart: unless-stopped
+
+volumes:
+  vessel_postgres_data:
+
+networks:
+  pontus-network:
+    driver: bridge

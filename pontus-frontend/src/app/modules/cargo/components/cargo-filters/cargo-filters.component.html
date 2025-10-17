@@ -1,0 +1,47 @@
+<div class="filters-container">
+  <form [formGroup]="filterForm" class="row g-3">
+    <div class="col-md-4">
+      <label for="search" class="form-label">Search</label>
+      <input
+        type="text"
+        class="form-control"
+        id="search"
+        formControlName="search"
+        placeholder="Search by type, description...">
+    </div>
+
+    <div class="col-md-3">
+      <label for="customsStatus" class="form-label">Customs Status</label>
+      <select class="form-select" id="customsStatus" formControlName="customsStatus">
+        <option value="">All statuses</option>
+        <option *ngFor="let status of customsStatuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="vesselId" class="form-label">Vessel ID</label>
+      <input
+        type="number"
+        class="form-control"
+        id="vesselId"
+        formControlName="vesselId"
+        placeholder="Filter by vessel">
+    </div>
+
+    <div class="col-md-2">
+      <label for="dangerous" class="form-label">Dangerous</label>
+      <select class="form-select" id="dangerous" formControlName="dangerous">
+        <option value="">All cargo</option>
+        <option value="true">Dangerous only</option>
+        <option value="false">Non-dangerous only</option>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
+        <i class="fas fa-times me-1"></i>
+        Clear Filters
+      </button>
+    </div>
+  </form>
+</div>

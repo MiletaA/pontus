@@ -1,0 +1,62 @@
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Nationality</th>
+        <th>Rank</th>
+        <th>Passport</th>
+        <th>Certificate</th>
+        <th>Vessel ID</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="loading">
+        <td colspan="8" class="text-center py-4">
+          <i class="fas fa-spinner fa-spin me-2"></i>
+          Loading crew members...
+        </td>
+      </tr>
+      <tr *ngIf="!loading && crewMembers.length === 0">
+        <td colspan="8" class="text-center py-4 text-muted">
+          <i class="fas fa-users me-2"></i>
+          No crew members found
+        </td>
+      </tr>
+      <tr *ngFor="let crewMember of crewMembers; trackBy: trackByCrewMemberId">
+        <td>{{ crewMember.id }}</td>
+        <td>{{ crewMember.firstName }} {{ crewMember.lastName }}</td>
+        <td>{{ crewMember.nationality }}</td>
+        <td>{{ crewMember.rank }}</td>
+        <td>{{ crewMember.passportNumber }}</td>
+        <td>{{ crewMember.certificateNumber || '-' }}</td>
+        <td>
+          <span *ngIf="crewMember.vesselId" class="badge bg-primary">{{ crewMember.vesselId }}</span>
+          <span *ngIf="!crewMember.vesselId" class="text-muted">Available</span>
+        </td>
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            <button
+              *ngIf="canUpdate()"
+              type="button"
+              class="btn btn-outline-primary"
+              (click)="editCrewMember(crewMember)"
+              title="Edit crew member">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button
+              *ngIf="canDelete()"
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="deleteCrewMember(crewMember)"
+              title="Delete crew member">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

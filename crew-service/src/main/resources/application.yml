@@ -1,0 +1,39 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: crew-service
+  
+  # Explicitly disable CORS - handled by API Gateway
+  web:
+    cors:
+      allowed-origins: []
+  
+  datasource:
+    url: jdbc:postgresql://postgres-crew:5432/pontus_crew
+    username: pontus_user
+    password: pontus_pass
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://naming-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    com.pontus.crew: DEBUG
+    org.springframework.web: DEBUG

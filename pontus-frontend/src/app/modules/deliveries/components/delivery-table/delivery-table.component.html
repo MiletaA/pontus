@@ -1,0 +1,65 @@
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Cargo ID</th>
+        <th>Destination</th>
+        <th>Recipient</th>
+        <th>Status</th>
+        <th>Est. Delivery</th>
+        <th>Actual Delivery</th>
+        <th>Tracking</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="loading">
+        <td colspan="9" class="text-center py-4">
+          <i class="fas fa-spinner fa-spin me-2"></i>
+          Loading deliveries...
+        </td>
+      </tr>
+      <tr *ngIf="!loading && deliveries.length === 0">
+        <td colspan="9" class="text-center py-4 text-muted">
+          <i class="fas fa-truck me-2"></i>
+          No deliveries found
+        </td>
+      </tr>
+      <tr *ngFor="let delivery of deliveries; trackBy: trackByDeliveryId">
+        <td>{{ delivery.id }}</td>
+        <td>{{ delivery.cargoId }}</td>
+        <td>{{ delivery.destination }}</td>
+        <td>{{ delivery.driverName }}</td>
+        <td>
+          <app-delivery-status-badge [delivery]="delivery"></app-delivery-status-badge>
+        </td>
+        <td>{{ formatDate(delivery.scheduledDate) }}</td>
+        <td>{{ formatDate(delivery.actualDate) }}</td>
+        <td>
+          <span class="badge bg-info">#{{ delivery.id }}</span>
+        </td>
+        <td>
+          <div class="btn-group btn-group-sm" role="group">
+            <button
+              *ngIf="canUpdate()"
+              type="button"
+              class="btn btn-outline-primary"
+              (click)="editDelivery(delivery)"
+              title="Edit delivery">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button
+              *ngIf="canDelete()"
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="deleteDelivery(delivery)"
+              title="Delete delivery">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
