@@ -73,6 +73,14 @@ public class DockController {
         return ResponseEntity.ok(responses);
     }
     
+    @GetMapping("/available")
+    @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER') or hasAuthority('HARBOR_MASTER') or hasAuthority('DOCK_WORKER') or hasAuthority('OPERATIONS')")
+    public ResponseEntity<List<DockResponse>> getAvailableDocks() {
+        log.info("Retrieving all available docks");
+        List<DockResponse> responses = dockService.getDocksByOccupiedStatus(false);
+        return ResponseEntity.ok(responses);
+    }
+    
     @GetMapping("/available/vessel-length/{vesselLength}")
     @PreAuthorize("hasAuthority('ADMIN') or hasAuthority('MANAGER') or hasAuthority('HARBOR_MASTER') or hasAuthority('DOCK_WORKER') or hasAuthority('OPERATIONS')")
     public ResponseEntity<List<DockResponse>> getAvailableDocksForVessel(@PathVariable BigDecimal vesselLength) {

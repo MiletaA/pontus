@@ -1,0 +1,114 @@
+<div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bi bi-plus-circle me-2"></i>{{ title }}
+            </h5>
+            <button type="button" class="btn-close" (click)="onCancel.emit()"></button>
+          </div>
+          
+          <div class="modal-body">
+            <form (ngSubmit)="submitForm()" #form="ngForm">
+              <div class="row">
+                <div class="col-md-6" *ngFor="let field of fields">
+                  <div class="mb-3">
+                    <label [for]="field.key" class="form-label">
+                      {{ field.label }}
+                      <span class="text-danger" *ngIf="field.required">*</span>
+                    </label>
+                    
+                    <!-- Text Input -->
+                    <input 
+                      *ngIf="field.type === 'text' || field.type === 'email'"
+                      [type]="field.type"
+                      class="form-control"
+                      [id]="field.key"
+                      [name]="field.key"
+                      [(ngModel)]="formData[field.key]"
+                      [placeholder]="field.placeholder || ''"
+                      [required]="field.required || false"
+                    >
+                    
+                    <!-- Number Input -->
+                    <input 
+                      *ngIf="field.type === 'number'"
+                      type="number"
+                      class="form-control"
+                      [id]="field.key"
+                      [name]="field.key"
+                      [(ngModel)]="formData[field.key]"
+                      [placeholder]="field.placeholder || ''"
+                      [required]="field.required || false"
+                      step="0.01"
+                    >
+                    
+                    <!-- Date Input -->
+                    <input 
+                      *ngIf="field.type === 'date'"
+                      type="datetime-local"
+                      class="form-control"
+                      [id]="field.key"
+                      [name]="field.key"
+                      [(ngModel)]="formData[field.key]"
+                      [required]="field.required || false"
+                    >
+                    
+                    <!-- Select Input -->
+                    <select 
+                      *ngIf="field.type === 'select'"
+                      class="form-select"
+                      [id]="field.key"
+                      [name]="field.key"
+                      [(ngModel)]="formData[field.key]"
+                      [required]="field.required || false"
+                    >
+                      <option value="">Select {{ field.label }}</option>
+                      <option *ngFor="let option of field.options" [value]="option.value">
+                        {{ option.label }}
+                      </option>
+                    </select>
+                    
+                    <!-- Checkbox Input -->
+                    <div *ngIf="field.type === 'checkbox'" class="form-check">
+                      <input 
+                        type="checkbox"
+                        class="form-check-input"
+                        [id]="field.key"
+                        [name]="field.key"
+                        [(ngModel)]="formData[field.key]"
+                      >
+                      <label class="form-check-label" [for]="field.key">
+                        {{ field.label }}
+                      </label>
+                    </div>
+                    
+                    <!-- Textarea Input -->
+                    <textarea 
+                      *ngIf="field.type === 'textarea'"
+                      class="form-control"
+                      [id]="field.key"
+                      [name]="field.key"
+                      [(ngModel)]="formData[field.key]"
+                      [placeholder]="field.placeholder || ''"
+                      [required]="field.required || false"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="onCancel.emit()">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" (click)="submitForm()" [disabled]="loading">
+              <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+              {{ loading ? 'Creating...' : 'Create' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>

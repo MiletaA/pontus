@@ -1,0 +1,69 @@
+<div class="container-fluid py-4">
+      <!-- Header -->
+      <div class="row mb-4">
+        <div class="col">
+          <h2>
+            <i class="bi bi-truck me-2"></i>Deliveries Management
+          </h2>
+          <p class="text-muted">Track and manage cargo deliveries</p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <form [formGroup]="filterForm">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label">Search</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  formControlName="search"
+                  placeholder="Search by cargo, location, driver..."
+                >
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" formControlName="status">
+                  <option value="">All Statuses</option>
+                  @for (status of deliveryStatuses; track status) {
+                    <option [value]="status">{{ getStatusLabel(status) }}</option>
+                  }
+                </select>
+              </div>
+              <div class="col-md-5 d-flex align-items-end">
+                <button type="button" class="btn btn-secondary w-100" (click)="filterForm.reset(); loadDeliveries()">
+                  <i class="bi bi-x-circle me-2"></i>Clear
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+      </div>
+
+      <!-- Data Table -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading deliveries...</p>
+      </div>
+
+      <app-data-table *ngIf="!loading"
+        title="Deliveries"
+        [data]="deliveries"
+        [columns]="columns"
+        [pageInfo]="pageInfo"
+        [showCreateButton]="true"
+        emptyMessage="No deliveries in the system."
+        (onPageChange)="onPageChange($event)"
+        (onCreate)="onCreateDelivery()"
+        (onEdit)="onEditDelivery($event)"
+        (onDelete)="onDeleteDelivery($event)">
+      </app-data-table>
+    </div>

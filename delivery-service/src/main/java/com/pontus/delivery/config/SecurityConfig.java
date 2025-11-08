@@ -12,7 +12,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 
-import javax.crypto.spec.SecretKeySpec;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import java.util.Collections;
 
 @Configuration
@@ -48,7 +49,8 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         // Create JWT decoder with the same secret key used by auth service
-        SecretKeySpec secretKey = new SecretKeySpec(jwtSecret.getBytes(), "HmacSHA256");
+        // Use Keys.hmacShaKeyFor to match the auth service's key generation
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         return NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
 

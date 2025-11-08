@@ -1,0 +1,22 @@
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: 2px solid var(--bs-light);
+  padding: 1rem;
+}
+
+.table-responsive {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.badge {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.875rem;
+}

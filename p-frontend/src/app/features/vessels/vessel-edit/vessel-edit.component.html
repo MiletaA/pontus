@@ -1,0 +1,196 @@
+<div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+              <h4 class="mb-0">
+                <i class="bi bi-pencil me-2"></i>Edit Vessel: {{ vessel.name }}
+              </h4>
+            </div>
+            
+            <div class="card-body">
+              @if (error) {
+                <div class="alert alert-danger">
+                  <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+                </div>
+              }
+              
+              @if (loading && !vessel.id) {
+                <div class="text-center py-5">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="mt-3">Loading vessel data...</p>
+                </div>
+              } @else {
+                <form (ngSubmit)="onSubmit()" #vesselForm="ngForm">
+                  <div class="row">
+                    <!-- Basic Information -->
+                    <div class="col-md-6">
+                      <h6 class="text-muted mb-3">Basic Information</h6>
+                      
+                      <div class="mb-3">
+                        <label for="name" class="form-label">Vessel Name <span class="text-danger">*</span></label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="name"
+                          name="name"
+                          [(ngModel)]="vessel.name"
+                          required
+                          placeholder="Enter vessel name"
+                        >
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="imoNumber" class="form-label">IMO Number <span class="text-danger">*</span></label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="imoNumber"
+                          name="imoNumber"
+                          [(ngModel)]="vessel.imoNumber"
+                          required
+                          placeholder="IMO1234567"
+                          pattern="^IMO[0-9]{7}$"
+                        >
+                        <div class="form-text">Format: IMO followed by 7 digits</div>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="vesselType" class="form-label">Vessel Type <span class="text-danger">*</span></label>
+                        <select 
+                          class="form-select" 
+                          id="vesselType"
+                          name="vesselType"
+                          [(ngModel)]="vessel.vesselType"
+                          required
+                        >
+                          <option value="">Select vessel type</option>
+                          <option value="CONTAINER_SHIP">Container Ship</option>
+                          <option value="BULK_CARRIER">Bulk Carrier</option>
+                          <option value="TANKER">Tanker</option>
+                          <option value="GENERAL_CARGO">General Cargo</option>
+                          <option value="RO_RO">RO-RO</option>
+                          <option value="LNG_CARRIER">LNG Carrier</option>
+                          <option value="CRUISE_SHIP">Cruise Ship</option>
+                          <option value="CARGO_SHIP">Cargo Ship</option>
+                          <option value="SUPPLY_VESSEL">Supply Vessel</option>
+                          <option value="OTHER">Other</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="length" class="form-label">Length (meters) <span class="text-danger">*</span></label>
+                        <input 
+                          type="number" 
+                          class="form-control" 
+                          id="length"
+                          name="length"
+                          [(ngModel)]="vessel.length"
+                          required
+                          min="1"
+                          step="0.01"
+                          placeholder="0.00"
+                        >
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="flagCountry" class="form-label">Flag Country <span class="text-danger">*</span></label>
+                        <input 
+                          type="text" 
+                          class="form-control" 
+                          id="flagCountry"
+                          name="flagCountry"
+                          [(ngModel)]="vessel.flagCountry"
+                          required
+                          placeholder="Country name"
+                        >
+                      </div>
+                    </div>
+                    
+                    <!-- Status & Schedule -->
+                    <div class="col-md-6">
+                      <h6 class="text-muted mb-3">Status & Schedule</h6>
+                      
+                      <div class="mb-3">
+                        <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
+                        <select 
+                          class="form-select" 
+                          id="status"
+                          name="status"
+                          [(ngModel)]="vessel.status"
+                          required
+                        >
+                          <option value="">Select status</option>
+                          <option value="SCHEDULED">Scheduled</option>
+                          <option value="UNDERWAY">Underway</option>
+                          <option value="ANCHORED">Anchored</option>
+                          <option value="BERTHED">Berthed</option>
+                          <option value="DEPARTED">Departed</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="scheduledArrival" class="form-label">Scheduled Arrival</label>
+                        <input 
+                          type="datetime-local" 
+                          class="form-control" 
+                          id="scheduledArrival"
+                          name="scheduledArrival"
+                          [(ngModel)]="vessel.scheduledArrival"
+                        >
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="scheduledDeparture" class="form-label">Scheduled Departure</label>
+                        <input 
+                          type="datetime-local" 
+                          class="form-control" 
+                          id="scheduledDeparture"
+                          name="scheduledDeparture"
+                          [(ngModel)]="vessel.scheduledDeparture"
+                        >
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="actualArrival" class="form-label">Actual Arrival</label>
+                        <input 
+                          type="datetime-local" 
+                          class="form-control" 
+                          id="actualArrival"
+                          name="actualArrival"
+                          [(ngModel)]="vessel.actualArrival"
+                        >
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="actualDeparture" class="form-label">Actual Departure</label>
+                        <input 
+                          type="datetime-local" 
+                          class="form-control" 
+                          id="actualDeparture"
+                          name="actualDeparture"
+                          [(ngModel)]="vessel.actualDeparture"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                      <i class="bi bi-x-circle me-2"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-warning" [disabled]="loading || vesselForm.invalid">
+                      <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                      <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+                      {{ loading ? 'Updating...' : 'Update Vessel' }}
+                    </button>
+                  </div>
+                </form>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

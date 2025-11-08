@@ -7,12 +7,26 @@ spring:
   cloud:
     gateway:
       globalcors:
+        add-to-simple-url-handler-mapping: true
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "http://localhost:4200,http://localhost:3000"
-            allowedMethods: "GET,POST,PUT,DELETE,OPTIONS,PATCH"
-            allowedHeaders: "*"
+            allowedOriginPatterns: 
+              - "http://localhost:*"
+              - "http://127.0.0.1:*"
+              - "https://localhost:*"
+              - "https://127.0.0.1:*"
+            allowedMethods: 
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+            allowedHeaders: 
+              - "*"
             allowCredentials: true
+            exposedHeaders: 
+              - "*"
             maxAge: 3600
       discovery:
         locator:

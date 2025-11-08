@@ -1,0 +1,157 @@
+<div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-person-plus me-2"></i>Add New Crew Member
+              </h4>
+            </div>
+            
+            <div class="card-body">
+              @if (error) {
+                <div class="alert alert-danger">
+                  <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+                </div>
+              }
+              
+              <form (ngSubmit)="onSubmit()" #crewForm="ngForm">
+                <div class="row">
+                  <!-- Basic Information -->
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-3">Personal Information</h6>
+                    
+                    <div class="mb-3">
+                      <label for="name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name"
+                        name="name"
+                        [(ngModel)]="crew.name"
+                        required
+                        placeholder="John Smith"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="nationality" class="form-label">Nationality <span class="text-danger">*</span></label>
+                      <select 
+                        class="form-select" 
+                        id="nationality"
+                        name="nationality"
+                        [(ngModel)]="crew.nationality"
+                        required
+                      >
+                        <option value="">Select nationality</option>
+                        @for (nation of nationalities; track nation) {
+                          <option [value]="nation">{{ nation }}</option>
+                        }
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="dateOfBirth" class="form-label">Date of Birth <span class="text-danger">*</span></label>
+                      <input 
+                        type="date" 
+                        class="form-control" 
+                        id="dateOfBirth"
+                        name="dateOfBirth"
+                        [(ngModel)]="crew.dateOfBirth"
+                        required
+                        [max]="maxBirthDate"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="passportNumber" class="form-label">Passport Number <span class="text-danger">*</span></label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="passportNumber"
+                        name="passportNumber"
+                        [(ngModel)]="crew.passportNumber"
+                        required
+                        placeholder="A12345678"
+                      >
+                    </div>
+                  </div>
+                  
+                  <!-- Professional Information -->
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-3">Professional Information</h6>
+                    
+                    <div class="mb-3">
+                      <label for="vesselId" class="form-label">Vessel ID <span class="text-danger">*</span></label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="vesselId"
+                        name="vesselId"
+                        [(ngModel)]="crew.vesselId"
+                        required
+                        placeholder="Enter vessel ID"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="position" class="form-label">Position <span class="text-danger">*</span></label>
+                      <select 
+                        class="form-select" 
+                        id="position"
+                        name="position"
+                        [(ngModel)]="crew.position"
+                        required
+                      >
+                        <option value="">Select position</option>
+                        @for (position of positions; track position) {
+                          <option [value]="position">{{ getPositionLabel(position) }}</option>
+                        }
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="certificate" class="form-label">Certificate Type</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="certificate"
+                        name="certificate"
+                        [(ngModel)]="crew.certificate"
+                        placeholder="STCW Certificate"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="certificateExpiry" class="form-label">Certificate Expiry</label>
+                      <input 
+                        type="date" 
+                        class="form-control" 
+                        id="certificateExpiry"
+                        name="certificateExpiry"
+                        [(ngModel)]="crew.certificateExpiry"
+                        [min]="today"
+                      >
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || crewForm.invalid">
+                    @if (loading) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                    } @else {
+                      <i class="bi bi-check-circle me-2"></i>
+                    }
+                    {{ loading ? 'Creating...' : 'Create Crew Member' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

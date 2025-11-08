@@ -14,9 +14,8 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                // Explicitly disable CORS - all CORS handling is done by API Gateway
-                // This prevents Spring Boot from auto-configuring CORS with wildcard '*'
-                registry.addMapping("/**").allowedOrigins(); // Empty origins = no CORS headers
+                // Do not add any CORS mappings - CORS is handled entirely by API Gateway
+                // This prevents duplicate CORS headers which cause browser errors
             }
         };
     }

@@ -1,0 +1,21 @@
+.sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    .sortable:hover {
+      background-color: var(--bs-gray-100);
+    }
+    .page-link.bg-primary {
+      border-color: var(--bs-primary);
+    }
+    .table th {
+      font-weight: 600;
+      color: var(--bs-gray-700);
+      border-bottom: 2px solid var(--bs-gray-200);
+    }
+    .table td {
+      vertical-align: middle;
+    }
+    .btn-group-sm .btn {
+      padding: 0.25rem 0.5rem;
+    }

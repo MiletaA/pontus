@@ -1,0 +1,89 @@
+
+// Override Bootstrap variables BEFORE importing Bootstrap
+$primary: #0056b3;
+$secondary: #1046da;
+$success: #28a745;
+$danger: #dc3545;
+$warning: #ffc107;
+$info: #17a2b8;
+$light: #f8f9fa;
+$dark: #343a40;
+
+// Import Bootstrap after variable overrides
+@import 'bootstrap/scss/bootstrap';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// Custom color scheme for maritime application
+:root {
+  // Main theme colors (only keeping used ones)
+  --primary-color: #0056b3;     
+  --light-color: #f8f9fa;
+  
+  // Navbar specific colors
+  --navbar-bg: var(--primary-color);
+  --navbar-text: #ffffff;
+  --navbar-hover: rgba(255, 255, 255, 0.1);
+  --navbar-active: rgba(255, 255, 255, 0.2);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--light-color);
+}
+
+.navbar {
+  background-color: var(--navbar-bg) !important;
+  
+  // .navbar-brand {
+  //   font-weight: 600;
+  //   color: var(--navbar-text) !important;
+  // }
+  
+  // .nav-link {
+  //   color: var(--navbar-text) !important;
+  //   opacity: 0.9;
+  //   transition: all 0.3s ease;
+    
+  //   &:hover {
+  //     opacity: 1;
+  //     background-color: var(--navbar-hover);
+  //   }
+    
+  //   &.active {
+  //     background-color: var(--navbar-active);
+  //     opacity: 1;
+  //   }
+  // }
+  
+  // .dropdown-toggle {
+  //   color: var(--navbar-text) !important;
+  // }
+}
+
+.card {
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.table {
+  background-color: white;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

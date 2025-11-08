@@ -1,0 +1,242 @@
+<div class="container-fluid py-4">
+  <div class="row mb-4">
+    <div class="col">
+      <h2>
+        <i class="bi bi-speedometer2 me-2"></i>Dashboard
+      </h2>
+      <p class="text-muted">Welcome back, {{currentUser?.username}} {{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="loading-spinner"></div>
+      <p class="mt-3">Loading dashboard data...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+    </div>
+  }
+
+  @if (!loading && !error) {
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-ship fs-2 text-primary"></i>
+            <h3 class="mt-2">{{ statistics.vesselsInPort }}</h3>
+            <p class="text-muted mb-0">Vessels in Port</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-arrow-down-circle fs-2 text-warning"></i>
+            <h3 class="mt-2">{{ statistics.expectedArrivals }}</h3>
+            <p class="text-muted mb-0">Expected Arrivals</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-building fs-2 text-success"></i>
+            <h3 class="mt-2">{{ statistics.availableDocks }}</h3>
+            <p class="text-muted mb-0">Available Docks</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-box-seam fs-2 text-info"></i>
+            <h3 class="mt-2">{{ statistics.activeCargo }}</h3>
+            <p class="text-muted mb-0">Active Cargo</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-truck fs-2 text-danger"></i>
+            <h3 class="mt-2">{{ statistics.pendingDeliveries }}</h3>
+            <p class="text-muted mb-0">Pending Deliveries</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 col-lg-2 mb-3">
+        <div class="card text-center">
+          <div class="card-body">
+            <i class="bi bi-people fs-2 text-secondary"></i>
+            <h3 class="mt-2">{{ statistics.crewMembers }}</h3>
+            <p class="text-muted mb-0">Crew Members</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Recent Vessels -->
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">
+              <i class="bi bi-ship me-2"></i>Recent Vessels
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (recentVessels.length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>IMO</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (vessel of recentVessels; track vessel.id) {
+                      <tr>
+                        <td>{{ vessel.name }}</td>
+                        <td>{{ vessel.imoNumber }}</td>
+                        <td>
+                          <span class="badge bg-{{ getStatusClass(vessel.status) }}">
+                            {{ vessel.status }}
+                          </span>
+                        </td>
+                        <td>
+                          <a routerLink="/vessels/{{ vessel.id }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-muted">No recent vessels</p>
+            }
+            <div class="text-center mt-3">
+              <a routerLink="/vessels" class="btn btn-primary">View All Vessels</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Arrivals -->
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">
+              <i class="bi bi-arrow-down-circle me-2"></i>Upcoming Arrivals
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (upcomingArrivals.length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Vessel</th>
+                      <th>ETA</th>
+                      <th>From</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (vessel of upcomingArrivals; track vessel.id) {
+                      <tr>
+                        <td>{{ vessel.name }}</td>
+                        <td>{{ formatDateTime(vessel.eta) }}</td>
+                        <td>{{ vessel.lastPort || 'N/A' }}</td>
+                        <td>
+                          <a routerLink="/vessels/{{ vessel.id }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-muted">No upcoming arrivals</p>
+            }
+            <div class="text-center mt-3">
+              <a routerLink="/vessels" class="btn btn-primary">View All Arrivals</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Deliveries -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-white">
+            <h5 class="mb-0">
+              <i class="bi bi-truck me-2"></i>Pending Deliveries
+            </h5>
+          </div>
+          <div class="card-body">
+            @if (pendingDeliveries.length > 0) {
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Delivery Code</th>
+                      <th>Tracking Number</th>
+                      <th>Destination</th>
+                      <th>Scheduled Delivery</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (delivery of pendingDeliveries; track delivery.id) {
+                      <tr>
+                        <td>{{ delivery.deliveryCode }}</td>
+                        <td>{{ delivery.trackingNumber }}</td>
+                        <td>{{ delivery.destination }}</td>
+                        <td>{{ formatDateTime(delivery.scheduledDelivery) }}</td>
+                        <td>
+                          <span class="badge bg-{{ getStatusClass(delivery.status) }}">
+                            {{ delivery.status }}
+                          </span>
+                        </td>
+                        <td>
+                          <a routerLink="/deliveries/{{ delivery.id }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            } @else {
+              <p class="text-muted">No pending deliveries</p>
+            }
+            <div class="text-center mt-3">
+              <a routerLink="/deliveries" class="btn btn-primary">View All Deliveries</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

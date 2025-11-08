@@ -1,0 +1,9 @@
+<div class="app-container">
+  @if (isAuthenticated) {
+    <app-navbar></app-navbar>
+  }
+  
+  <main class="main-content" [class.with-navbar]="isAuthenticated">
+    <router-outlet></router-outlet>
+  </main>
+</div>

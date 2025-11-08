@@ -1,0 +1,39 @@
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  font-weight: 600;
+  color: var(--bs-gray-700);
+  border-bottom: 2px solid var(--bs-gray-300);
+}
+
+.btn-group {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.badge {
+  font-size: 0.875rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-link {
+  color: var(--primary-color);
+  border-radius: 5px;
+  margin: 0 2px;
+}
+
+.page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-label {
+  font-weight: 500;
+  color: var(--bs-gray-700);
+}

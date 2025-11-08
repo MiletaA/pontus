@@ -1,0 +1,157 @@
+<div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0">
+                <i class="bi bi-plus-circle me-2"></i>Create New Cargo
+              </h4>
+            </div>
+            
+            <div class="card-body">
+              @if (error) {
+                <div class="alert alert-danger">
+                  <i class="bi bi-exclamation-triangle me-2"></i>{{ error }}
+                </div>
+              }
+              
+              <form (ngSubmit)="onSubmit()" #cargoForm="ngForm">
+                <div class="row">
+                  <!-- Basic Information -->
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-3">Basic Information</h6>
+                    
+                    <div class="mb-3">
+                      <label for="vesselId" class="form-label">Vessel ID <span class="text-danger">*</span></label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="vesselId"
+                        name="vesselId"
+                        [(ngModel)]="cargo.vesselId"
+                        required
+                        placeholder="Enter vessel ID"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                      <textarea 
+                        class="form-control" 
+                        id="description"
+                        name="description"
+                        [(ngModel)]="cargo.description"
+                        required
+                        rows="3"
+                        placeholder="Enter detailed cargo description"
+                      ></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="weightTons" class="form-label">Weight (tons) <span class="text-danger">*</span></label>
+                      <input 
+                        type="number" 
+                        class="form-control" 
+                        id="weightTons"
+                        name="weightTons"
+                        [(ngModel)]="cargo.weightTons"
+                        required
+                        min="0.01"
+                        step="0.01"
+                        placeholder="0.00"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input 
+                          type="checkbox" 
+                          class="form-check-input" 
+                          id="isDangerous"
+                          name="isDangerous"
+                          [(ngModel)]="cargo.isDangerous"
+                        >
+                        <label class="form-check-label" for="isDangerous">
+                          Dangerous Goods
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Classification & Status -->
+                  <div class="col-md-6">
+                    <h6 class="text-muted mb-3">Classification & Status</h6>
+                    
+                    <div class="mb-3">
+                      <label for="customsStatus" class="form-label">Customs Status <span class="text-danger">*</span></label>
+                      <select 
+                        class="form-select" 
+                        id="customsStatus"
+                        name="customsStatus"
+                        [(ngModel)]="cargo.customsStatus"
+                        required
+                      >
+                        <option value="">Select customs status</option>
+                        @for (status of customsStatuses; track status) {
+                          <option [value]="status">{{ getStatusLabel(status) }}</option>
+                        }
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="cargoType" class="form-label">Cargo Type</label>
+                      <select 
+                        class="form-select" 
+                        id="cargoType"
+                        name="cargoType"
+                        [(ngModel)]="cargo.cargoType"
+                      >
+                        <option value="">Select cargo type</option>
+                        @for (type of cargoTypes; track type) {
+                          <option [value]="type">{{ getTypeLabel(type) }}</option>
+                        }
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="origin" class="form-label">Origin</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="origin"
+                        name="origin"
+                        [(ngModel)]="cargo.origin"
+                        placeholder="Port or location of origin"
+                      >
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="destination" class="form-label">Destination</label>
+                      <input 
+                        type="text" 
+                        class="form-control" 
+                        id="destination"
+                        name="destination"
+                        [(ngModel)]="cargo.destination"
+                        placeholder="Destination port or location"
+                      >
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                  <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                    <i class="bi bi-x-circle me-2"></i>Cancel
+                  </button>
+                  <button type="submit" class="btn btn-primary" [disabled]="loading || cargoForm.invalid">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    <i *ngIf="!loading" class="bi bi-check-circle me-2"></i>
+                    {{ loading ? 'Creating...' : 'Create Cargo' }}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

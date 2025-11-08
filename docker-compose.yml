@@ -120,7 +120,7 @@ services:
   # Eureka Naming Server
   # ==========================
   naming-server:
-    image: miletaa/pontus-naming-server:latest
+    image: pontus-naming-server:local
     container_name: naming-server
     ports:
       - "8761:8761"
@@ -136,7 +136,7 @@ services:
   # Authentication Service
   # ==========================
   auth-service:
-    image: miletaa/pontus-auth-service:latest
+    image: pontus-auth-service:local
     container_name: auth-service
     ports:
       - "8086:8086"
@@ -159,7 +159,7 @@ services:
   # API Gateway
   # ==========================
   api-gateway:
-    image: miletaa/pontus-api-gateway:latest
+    image: pontus-api-gateway:local
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -179,7 +179,7 @@ services:
   # Vessel Service
   # ==========================
   vessel-service:
-    image: miletaa/pontus-vessel-service:latest
+    image: pontus-vessel-service:local
     container_name: vessel-service
     ports:
       - "8081:8081"
@@ -202,7 +202,7 @@ services:
   # Dock Service
   # ==========================
   dock-service:
-    image: miletaa/pontus-dock-service:latest
+    image: pontus-dock-service:local
     container_name: dock-service
     ports:
       - "8082:8082"
@@ -225,7 +225,7 @@ services:
   # Cargo Service
   # ==========================
   cargo-service:
-    image: miletaa/pontus-cargo-service:latest
+    image: pontus-cargo-service:local
     container_name: cargo-service
     ports:
       - "8083:8083"
@@ -248,7 +248,7 @@ services:
   # Crew Service
   # ==========================
   crew-service:
-    image: miletaa/pontus-crew-service:latest
+    image: pontus-crew-service:local
     container_name: crew-service
     ports:
       - "8084:8084"
@@ -271,7 +271,7 @@ services:
   # Delivery Service
   # ==========================
   delivery-service:
-    image: miletaa/pontus-delivery-service:latest
+    image: pontus-delivery-service:local
     container_name: delivery-service
     ports:
       - "8085:8085"

@@ -12,8 +12,10 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.http.HttpMethod;
 
-import javax.crypto.spec.SecretKeySpec;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 
 @SpringBootApplication
 @EnableWebFluxSecurity
@@ -32,19 +34,22 @@ public class ApiGatewayApplication {
         return http
                 .authorizeExchange(exchanges -> exchanges
                         .pathMatchers("/auth/**").permitAll() // Auth endpoints are public
+                                .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow OPTIONS requests for CORS preflight
                         .anyExchange().authenticated() // All other requests require authentication
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtDecoder(jwtDecoder())) // Use JWT for authentication
                 )
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for REST APIs
+                .cors(cors -> cors.disable()) // Disable Spring Security CORS - handled by Spring Cloud Gateway global CORS
                 .build();
     }
 
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
         // Create JWT decoder with the same secret key used by auth service
-        SecretKeySpec secretKey = new SecretKeySpec(jwtSecret.getBytes(), "HmacSHA256");
+        // Use Keys.hmacShaKeyFor to match the auth service's key generation
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         return NimbusReactiveJwtDecoder.withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.HS256)  
                 .build();
